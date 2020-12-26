@@ -26,7 +26,7 @@ mapping.get("/sql", async (ctx, next) => {
       resultData = undefined,
       isCheckColumns = false,
       isCheckData = false;
-  
+   
     if (typeof listTables == "object" && listTables.hasOwnProperty("recordset")) {
       listColumns = await pool
         .request()
