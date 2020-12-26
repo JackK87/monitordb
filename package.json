@@ -1,0 +1,19 @@
+{
+  "name": "monversion1c",
+  "version": "1.0.0",
+  "description": "мониторинг версии 1с",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Крохин Евгений <Evgeniy.Krokhin@russianpost.ru>",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.0",
+    "koa-router": "^9.1.0",
+    "mssql": "^6.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
