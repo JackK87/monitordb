@@ -25,7 +25,7 @@ class MSSQL {
     }
 
     cmdExecute(connectionName, sqlCmd) {
-        const findPool = listConnection.find(item => item.connectionName === this.connectionName)
+        const findPool = listConnection.find(item => item.connectionName === connectionName)
 
         if (findPool) {
             const pool = findPool.pool

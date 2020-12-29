@@ -22,7 +22,7 @@ mapping.get("/sql", async (ctx, next) => {
   
     let listColumns = undefined,
       filteredColumns = undefined,
-      dataTable = undefined
+      dataTable = undefined,
       resultData = undefined,
       isCheckColumns = false,
       isCheckData = false;
