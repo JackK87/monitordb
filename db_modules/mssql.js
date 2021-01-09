@@ -1,9 +1,10 @@
 const sql = require('mssql')
 
-class MSSQL {
-    static listConnection = [];
+module.exports = class MsSql {
 
     constructor(connectionName, server, dbname, user, pwd) {
+        this.listConnection = []
+
         this.connectionName = connectionName
         this.server = server
         this.dbname = dbname
@@ -11,21 +12,27 @@ class MSSQL {
         this.pwd = pwd
     }
 
-    connection() {
-        //Driver=msnodesqlv8;Server=R04PAC1CDB01T\\TEST;Database=R04-AO-ASZUP-TEST;UID=MAIN\\Evgeniy.Krokhin;PWD=Jekagud*/;Encrypt=true
+    async connection() {
+
         const connectionString = `Driver=msnodesqlv8;Server=${ this.server };Database=${ this.dbname };UID=${ this.user };PWD=${ this.pwd };Encrypt=true`
-        const pool = await sql.connect(connectionString)  
 
-        let findPool = listConnection.find(item => item.connectionName === this.connectionName)
+        try {
+            const pool = await sql.connect(connectionString)
 
-        if (findPool)
-            findPool.pool = pool
-        else
-            listConnection.push({ connectionName: findPool.connectionName, pool: pool})
+            let findPool = this.listConnection.find(item => item.connectionName === this.connectionName)
+
+            if (findPool)
+                findPool.pool = pool
+            else
+                this.listConnection.push({ connectionName: this.connectionName, pool: pool})
+                
+        } catch (error) {
+            console.log(error);
+        }        
     }
 
-    cmdExecute(connectionName, sqlCmd) {
-        const findPool = listConnection.find(item => item.connectionName === connectionName)
+    async cmdExecute(connectionName, sqlCmd) {
+        const findPool = this.listConnection.find(item => item.connectionName === connectionName)
 
         if (findPool) {
             const pool = findPool.pool
@@ -37,9 +44,9 @@ class MSSQL {
             return queryResult
 
         } else {
-            console.error()
+            console.error('Error')
         }
     }
 }
 
-module.exports = new MSSQL()
+ 

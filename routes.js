@@ -1,17 +1,24 @@
+const sql = require('mssql')
+
 const router = require('koa-router')
+const homeControler = require('./controllers/HomeController')
 
 const mapping = router()
 
 mapping.get("/sql", async (ctx, next) => {
-    ctx.body = "Hell1o World";
-  });
+  result = await homeControler()
+
+  ctx.body = result
+});
   
   mapping.get("/", async (ctx, next) => {
     let pool = await sql.connect(
-      ""
+      "Driver=msnodesqlv8;Server=R04PAC1CDB01T\\TEST;Database=R04-AO-ASZUP-TEST;UID=MAIN\\Evgeniy.Krokhin;PWD=Jekagud/*;Encrypt=true"
     );
   
-    let listTables = await pool
+    console.log(pool);
+
+   /* let listTables = await pool
       .request()
       .query(
         "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME LIKE '%InfoRg[0-9]%'"
@@ -19,7 +26,7 @@ mapping.get("/sql", async (ctx, next) => {
       .catch((err) => {
         console.log(err);
       });
-  
+  */
     let listColumns = undefined,
       filteredColumns = undefined,
       dataTable = undefined,
@@ -92,5 +99,27 @@ mapping.get("/sql", async (ctx, next) => {
   
     ctx.body = resultData;
   });
+
+  function checkColumn(columns) {
+    if (typeof columns == "object" && columns.hasOwnProperty('COLUMN_NAME') && columns.COLUMN_NAME == '_Period') 
+      return true
+  
+    return false
+  }
+  
+  function checkData(data) {
+    let isPointExchange = false,
+    isVersionPlatform = false
+  
+    for (const key in data) {
+      if (data.hasOwnProperty(key) && data[key] == 'ALT')
+        isPointExchange = true
+        
+      if (data.hasOwnProperty(key) && (data[key].toString().indexOf('8.2.') || data[key].toString().indexOf('8.3.'))) 
+        isVersionPlatform = true
+    }
+  
+    return isPointExchange && isVersionPlatform;
+  }
 
   module.exports = mapping.routes()
